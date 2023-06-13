@@ -15,10 +15,10 @@ use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('index');
-})->name('index');;
+})->name('index');
 Route::get('/index', function () {
     return view('index');
 });
 
 Route::get('/dashboard', [AuthController::class, 'handleALBCallback'])->name('handleALBCallback');
-Route::get('/logout', [AuthController::class,'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
