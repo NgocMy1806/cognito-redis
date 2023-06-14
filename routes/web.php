@@ -14,10 +14,17 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::get('/', function () {
-    return view('index');
+    return view('index',
+     [
+        'instanceId' => $instanceId
+      ]);
 })->name('index');
+
 Route::get('/index', function () {
-    return view('index');
+    return view('index',
+     [
+        'instanceId' => $instanceId
+      ]);
 });
 
 Route::get('/dashboard', [AuthController::class, 'handleALBCallback'])->name('handleALBCallback');
