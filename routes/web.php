@@ -14,6 +14,7 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::get('/', function () {
+     $instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id');
     return view('index',
      [
         'instanceId' => $instanceId
@@ -21,6 +22,7 @@ Route::get('/', function () {
 })->name('index');
 
 Route::get('/index', function () {
+     $instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id');
     return view('index',
      [
         'instanceId' => $instanceId
