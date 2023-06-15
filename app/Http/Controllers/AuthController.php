@@ -41,7 +41,19 @@ class AuthController extends Controller
 
     session()->put('userName', $userName);
 
-    $instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id');
+   $token = file_get_contents('http://169.254.169.254/latest/api/token', false, stream_context_create([
+    'http' => [
+        'method' => 'PUT',
+        'header' => "X-aws-ec2-metadata-token-ttl-seconds: 300",
+    ],
+]));
+
+$instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id', false, stream_context_create([
+    'http' => [
+        'header' => "X-aws-ec2-metadata-token: $token",
+    ],
+]));
+
     // Use the access token for further requests or store it in the session
 
     return view(
