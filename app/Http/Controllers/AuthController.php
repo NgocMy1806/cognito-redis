@@ -10,6 +10,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -40,7 +41,9 @@ class AuthController extends Controller
     $userName = $payload->name;
 
     session()->put('userName', $userName);
-
+    
+    
+// get instance ID
    $token = file_get_contents('http://169.254.169.254/latest/api/token', false, stream_context_create([
     'http' => [
         'method' => 'PUT',
@@ -54,12 +57,24 @@ $instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instanc
     ],
 ]));
 
-    // Use the access token for further requests or store it in the session
+    //get access_count to page dashboard 
+     // Check if the access count exists in the session for the current user
+    if (Session::has('access_count')) {
+        // Increment the access count
+        Session::increment('access_count');
+    } else {
+        // Initialize the access count to 1
+        Session::put('access_count', 1);
+    }
+
+    // Get the access count for the current user
+    $accessCount = Session::get('access_count');
 
     return view(
       'dashboard',
       [
-        'instanceId' => $instanceId
+        'instanceId' => $instanceId,
+        'accessCount' => $accessCount
       ]
     );
   }
