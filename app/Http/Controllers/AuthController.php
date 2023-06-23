@@ -38,33 +38,33 @@ class AuthController extends Controller
     $algorithms = 'ES256';
     $payload = JWT::decode($encodedJwt, new Key($pubKey, $algorithms));
 
-    $userName = $payload->name;
+    $userEmail = $payload->email;
 
-    session()->put('userName', $userName);
-    
-    
-// get instance ID
-   $token = file_get_contents('http://169.254.169.254/latest/api/token', false, stream_context_create([
-    'http' => [
+    session()->put('userEmail', $userEmail);
+
+
+    // get instance ID
+    $token = file_get_contents('http://169.254.169.254/latest/api/token', false, stream_context_create([
+      'http' => [
         'method' => 'PUT',
         'header' => "X-aws-ec2-metadata-token-ttl-seconds: 300",
-    ],
-]));
+      ],
+    ]));
 
-$instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id', false, stream_context_create([
-    'http' => [
+    $instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id', false, stream_context_create([
+      'http' => [
         'header' => "X-aws-ec2-metadata-token: $token",
-    ],
-]));
+      ],
+    ]));
 
     //get access_count to page dashboard 
-     // Check if the access count exists in the session for the current user
+    // Check if the access count exists in the session for the current user
     if (Session::has('access_count')) {
-        // Increment the access count
-        Session::increment('access_count');
+      // Increment the access count
+      Session::increment('access_count');
     } else {
-        // Initialize the access count to 1
-        Session::put('access_count', 1);
+      // Initialize the access count to 1
+      Session::put('access_count', 1);
     }
 
     // Get the access count for the current user

@@ -14,41 +14,45 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::get('/', function () {
-     $token = file_get_contents('http://169.254.169.254/latest/api/token', false, stream_context_create([
-    'http' => [
-        'method' => 'PUT',
-        'header' => "X-aws-ec2-metadata-token-ttl-seconds: 300",
-    ],
-]));
+    $token = file_get_contents('http://169.254.169.254/latest/api/token', false, stream_context_create([
+        'http' => [
+            'method' => 'PUT',
+            'header' => "X-aws-ec2-metadata-token-ttl-seconds: 300",
+        ],
+    ]));
 
-$instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id', false, stream_context_create([
-    'http' => [
-        'header' => "X-aws-ec2-metadata-token: $token",
-    ],
-]));
-    return view('index',
-     [
-        'instanceId' => $instanceId
-      ]);
+    $instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id', false, stream_context_create([
+        'http' => [
+            'header' => "X-aws-ec2-metadata-token: $token",
+        ],
+    ]));
+    return view(
+        'index',
+        [
+            'instanceId' => $instanceId
+        ]
+    );
 })->name('index');
 
 Route::get('/index', function () {
     $token = file_get_contents('http://169.254.169.254/latest/api/token', false, stream_context_create([
-    'http' => [
-        'method' => 'PUT',
-        'header' => "X-aws-ec2-metadata-token-ttl-seconds: 300",
-    ],
-]));
+        'http' => [
+            'method' => 'PUT',
+            'header' => "X-aws-ec2-metadata-token-ttl-seconds: 300",
+        ],
+    ]));
 
-$instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id', false, stream_context_create([
-    'http' => [
-        'header' => "X-aws-ec2-metadata-token: $token",
-    ],
-]));
-    return view('index',
-     [
-        'instanceId' => $instanceId
-      ]);
+    $instanceId = file_get_contents('http://169.254.169.254/latest/meta-data/instance-id', false, stream_context_create([
+        'http' => [
+            'header' => "X-aws-ec2-metadata-token: $token",
+        ],
+    ]));
+    return view(
+        'index',
+        [
+            'instanceId' => $instanceId
+        ]
+    );
 });
 
 Route::get('/dashboard', [AuthController::class, 'handleALBCallback'])->name('handleALBCallback');
